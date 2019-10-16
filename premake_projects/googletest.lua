@@ -1,11 +1,11 @@
 -- Author: Szymon Jackiewicz
 -- 
 -- Project: Puzzle_Engine
--- File: puzzle_engine.lua
--- Date: 15/10/2019
+-- File: googletest.lua
+-- Date: 16/10/2019
 
-project "puzzle_engine"
-    location "%{wks.location}/puzzle_engine"
+project "googletest"
+    location "%{wks.location}/3rd_party/googletest"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
@@ -15,13 +15,14 @@ project "puzzle_engine"
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
-    files {
-        "%{prj.location}/src/**.h",
-        "%{prj.location}/src/**.cpp"
+    includedirs {
+        "%{prj.location}/googletest/include",
+        "%{prj.location}/googletest",
     }
 
-    includedirs {
-        "%{prj.location}/src",
+    files {
+        "%{prj.location}/googletest/include/**.h",
+        "%{prj.location}/googletest/src/**.cc"
     }
 
     filter "configurations:Debug"

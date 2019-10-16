@@ -20,6 +20,7 @@ workspace "Puzzle_Engine"
     -- Dependencies
     extincludes = {}
     extincludes["puzzle_engine"]  = "%{wks.location}/puzzle_engine/src"
+    extincludes["googletest"] = "%{wks.location}/3rd_party/googletest/googletest/include"
 
     -- Logic Libraries --
     include "premake_projects/puzzle_engine.lua"
@@ -27,3 +28,8 @@ workspace "Puzzle_Engine"
     -- Main Project --
     -- Requires: puzzle_engine
     include "premake_projects/sandbox.lua"
+
+    -- Testing --
+    include "premake_projects/googletest.lua"
+    include "premake_projects/puzzle_engine_test.lua"
+

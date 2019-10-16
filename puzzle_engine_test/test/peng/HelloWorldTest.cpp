@@ -1,8 +1,7 @@
-﻿#include "peng/HelloWorld.h"
+#include "peng/HelloWorld.h"
 #include "gtest/gtest.h"
 
 // simplemath.h
-
 #include <cmath>
 
 double cubic(double d)

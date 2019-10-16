@@ -1,12 +1,12 @@
 -- Author: Szymon Jackiewicz
 -- 
 -- Project: Puzzle_Engine
--- File: puzzle_engine.lua
+-- File: puzzle_engine_test.lua
 -- Date: 15/10/2019
 
-project "puzzle_engine"
-    location "%{wks.location}/puzzle_engine"
-    kind "StaticLib"
+project "puzzle_engine_test"
+    location "%{wks.location}/puzzle_engine_test"
+    kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
     systemversion "latest"
@@ -16,12 +16,18 @@ project "puzzle_engine"
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
     files {
-        "%{prj.location}/src/**.h",
-        "%{prj.location}/src/**.cpp"
+        "%{prj.location}/test/**.h",
+        "%{prj.location}/test/**.cpp"
     }
 
     includedirs {
-        "%{prj.location}/src",
+        "%{wks.location}/puzzle_engine/src",
+        "%{wks.location}/3rd_party/googletest/googletest/include"
+    }
+
+    links {
+        "puzzle_engine",
+        "googletest"
     }
 
     filter "configurations:Debug"
