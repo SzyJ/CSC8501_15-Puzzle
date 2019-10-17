@@ -3,8 +3,7 @@
 
 int main() {
 
-    peng::LibTest peng;
-    std::cout << peng.Hello(std::cout);
+    std::cout << peng::Math::Factorial(10);
 
     return 0;
 }

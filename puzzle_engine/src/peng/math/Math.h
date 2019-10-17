@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace WinTUI {
+namespace peng {
 
     class Math {
     public:

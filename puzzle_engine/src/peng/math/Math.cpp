@@ -6,7 +6,7 @@
 
 #include "Math.h"
 
-namespace WinTUI {
+namespace peng {
 
     int Math::Factorial(int number) {
         if (number <= 1) {
