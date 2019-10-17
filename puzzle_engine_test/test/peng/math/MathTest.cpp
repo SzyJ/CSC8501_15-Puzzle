@@ -8,14 +8,14 @@
 #include "peng/math/Math.h"
 
 TEST(testMath, FactorialTest) {
-    EXPECT_EQ(6, peng::Math::Factorial(3));
-    EXPECT_EQ(1, peng::Math::Factorial(0));
-    EXPECT_EQ(1, peng::Math::Factorial(1));
+    EXPECT_EQ(6, Peng::Math::Factorial(3));
+    EXPECT_EQ(1, Peng::Math::Factorial(0));
+    EXPECT_EQ(1, Peng::Math::Factorial(1));
 
 }
 
 TEST(testMath, CombinationTest) {
-    EXPECT_EQ(15, peng::Math::Combination(6,2));
-    EXPECT_EQ(0,  peng::Math::Combination(6,15));
-    EXPECT_EQ(1,  peng::Math::Combination(10,10));
+    EXPECT_EQ(15, Peng::Math::Combination(6,2));
+    EXPECT_EQ(0,  Peng::Math::Combination(6,15));
+    EXPECT_EQ(1,  Peng::Math::Combination(10,10));
 }

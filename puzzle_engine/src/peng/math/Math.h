@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace peng {
+namespace Peng {
 
     class Math {
     public:

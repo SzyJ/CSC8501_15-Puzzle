@@ -6,7 +6,7 @@
 
 #include "Math.h"
 
-namespace peng {
+namespace Peng {
 
     int Math::Factorial(int number) {
         if (number <= 1) {
