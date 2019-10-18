@@ -13,6 +13,10 @@ namespace Peng {
             return 1;
         }
 
+        if (number == 2) {
+            return 2;
+        }
+
         return number * Factorial(number - 1);
     }
 
