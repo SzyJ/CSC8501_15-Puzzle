@@ -4,8 +4,8 @@
 -- File: WinTUI.lua
 -- Date: 18/10/2019
 
-project "googletest"
-    location "%{wks.location}/3rd_party/googletest"
+project "WinTUI"
+    location "%{wks.location}/3rd_party/WinTUI"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
@@ -16,13 +16,13 @@ project "googletest"
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
     includedirs {
-        "%{prj.location}/googletest/include",
-        "%{prj.location}/googletest",
+        "%{prj.location}/WinTUI/include",
+        "%{prj.location}/WinTUI/build"
     }
 
     files {
-        "%{prj.location}/googletest/include/**.h",
-        "%{prj.location}/googletest/src/**.cc"
+        "%{prj.location}/WinTUI/include/**.h",
+        "%{prj.location}/WinTUI/build/**.cpp"
     }
 
     filter "configurations:Debug"

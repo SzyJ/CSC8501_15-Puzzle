@@ -2,3 +2,6 @@
 	path = 3rd_party/googletest
 	url = https://github.com/google/googletest
 	ignore = untracked
+[submodule "3rd_party/WinTUI"]
+	path = 3rd_party/WinTUI
+	url = https://github.com/SzyJ/WinTUI

@@ -1,11 +1,11 @@
 -- Author: Szymon Jackiewicz
 -- 
 -- Project: Puzzle_Engine
--- File: sandbox.lua
+-- File: puzzle_app.lua
 -- Date: 15/10/2019
 
-project "sandbox"
-    location "%{wks.location}/sandbox"
+project "puzzle_app"
+    location "%{wks.location}/puzzle_app"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
@@ -22,9 +22,11 @@ project "sandbox"
 
     includedirs {
         "%{wks.location}/puzzle_engine/src",
+        "%{wks.location}/3rd_party/WinTUI/WinTUI/include"
     }
 
     links {
+        "WinTUI",
         "puzzle_engine"
     }
 
