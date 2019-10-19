@@ -12,7 +12,7 @@ int main() {
 
     std::cout << Peng::Math::Factorial(10);
 
-    UI::MainMenu mainMenu;
+    ui::MainMenu mainMenu;
     mainMenu.Show();
 
     return 0;

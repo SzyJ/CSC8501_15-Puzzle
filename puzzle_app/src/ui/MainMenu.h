@@ -8,7 +8,7 @@
 
 #include <Fixtures/Menu.h>
 
-namespace UI {
+namespace ui {
 
     class MainMenu {
     public:

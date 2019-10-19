@@ -4,10 +4,11 @@
 // File: MainMenu.cpp
 // Date: 18/10/2019
 
+#include "Utils/Color.h"
 #include "MainMenu.h"
 #include <iostream>
 
-namespace UI {
+namespace ui {
     MainMenu::MainMenu() {
         const char* m_MenuOptions[] = {
            "Create a custom grid",
