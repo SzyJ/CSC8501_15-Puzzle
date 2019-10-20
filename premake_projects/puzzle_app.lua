@@ -22,6 +22,7 @@ project "puzzle_app"
 
     includedirs {
         "%{wks.location}/puzzle_engine/src",
+        "%{wks.location}/puzzle_app/src",
         "%{wks.location}/3rd_party/WinTUI/WinTUI/include"
     }
 

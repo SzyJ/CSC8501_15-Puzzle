@@ -7,10 +7,16 @@
 #pragma once
 
 #include <Fixtures/Menu.h>
+#include "fsm/State.h"
 
 namespace ui {
+    enum Options {
+        build,
+        load,
+        exit
+    };
 
-    class MainMenu {
+    class MainMenu : public fsm::State {
     public:
         MainMenu();
         ~MainMenu();
@@ -19,9 +25,12 @@ namespace ui {
 
         int GetLastSelected();
 
+        void GoTo();
+
     private:
        WinTUI::Menu* m_MainMenu;
 
+       void OnEnter() override;
     };
 
 }

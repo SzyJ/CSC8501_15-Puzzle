@@ -9,6 +9,11 @@
 #include <iostream>
 
 namespace ui {
+
+    void MainMenu::OnEnter() {
+        Show();
+    }
+
     MainMenu::MainMenu() {
         const char* m_MenuOptions[] = {
            "Create a custom grid",
