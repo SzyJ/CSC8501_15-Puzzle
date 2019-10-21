@@ -9,11 +9,12 @@
 #include <Fixtures/Menu.h>
 #include "fsm/State.h"
 
-namespace ui {
+namespace screen {
     enum Options {
-        build,
-        load,
-        exit
+        random = 0,
+        build = 1,
+        load = 2,
+        exit = 3
     };
 
     class MainMenu : public fsm::State {
@@ -30,7 +31,8 @@ namespace ui {
     private:
        WinTUI::Menu* m_MainMenu;
 
-       void OnEnter() override;
+       virtual void OnEnter() override;
+       virtual void OnExit() override;
     };
 
 }

@@ -4,24 +4,34 @@
 // File: MainMenu.cpp
 // Date: 18/10/2019
 
-#include "Utils/Color.h"
 #include "MainMenu.h"
+#include "fsm/Controller.h"
+#include "Utils/Color.h"
+#include "Utils/Console.h"
+
 #include <iostream>
 
-namespace ui {
+
+
+namespace screen {
 
     void MainMenu::OnEnter() {
         Show();
     }
 
+    void MainMenu::OnExit() {
+        WinTUI::Console::ClearScreen();
+    }
+
     MainMenu::MainMenu() {
         const char* m_MenuOptions[] = {
+           "Generate random grid",
            "Create a custom grid",
            "   Load from file   ",
            "        Exit        "
         };
 
-        m_MainMenu = new WinTUI::Menu(m_MenuOptions, 3);
+        m_MainMenu = new WinTUI::Menu(m_MenuOptions, 4);
 
         m_MainMenu->SetSelectedBefore([](std::ostream& ostream) {
             ostream << "* ";
@@ -45,7 +55,20 @@ namespace ui {
         delete m_MainMenu;
     }
 
-    void MainMenu::Show() { m_MainMenu->Show(std::cout); }
+    void MainMenu::Show() {
+        m_MainMenu->Show(std::cout);
+        switch (m_MainMenu->GetLastSelected()) {
+        case random:
+            fsm::Controller::Get().GoTo(fsm::States::RandomGrid);
+            break;
+        case build:
+        case load:
+        case exit:
+        default:
+            break;
+        }
+
+    }
 
     int MainMenu::GetLastSelected() { return m_MainMenu->GetLastSelected(); }
 
