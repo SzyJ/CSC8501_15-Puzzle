@@ -17,8 +17,6 @@ namespace screen {
 
         int GetUserChoice();
 
-
-
     private:
         WinTUI::Prompt* m_NumberPrompt;
 

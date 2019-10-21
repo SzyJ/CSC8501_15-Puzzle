@@ -11,12 +11,22 @@
 
 #include <iostream>
 
-
-
 namespace screen {
 
     void MainMenu::OnEnter() {
         Show();
+
+        switch (m_MainMenu->GetLastSelected()) {
+        case random:
+            fsm::Controller::Get().GoTo(fsm::States::RandomGrid);
+            break;
+        case build:
+        case load:
+        case exit:
+        default:
+            break;
+        }
+
     }
 
     void MainMenu::OnExit() {
@@ -57,19 +67,6 @@ namespace screen {
 
     void MainMenu::Show() {
         m_MainMenu->Show(std::cout);
-        switch (m_MainMenu->GetLastSelected()) {
-        case random:
-            fsm::Controller::Get().GoTo(fsm::States::RandomGrid);
-            break;
-        case build:
-        case load:
-        case exit:
-        default:
-            break;
-        }
-
     }
-
-    int MainMenu::GetLastSelected() { return m_MainMenu->GetLastSelected(); }
 
 }
