@@ -8,10 +8,13 @@
 
 namespace fsm {
 
+
     enum States {
         MainMenu,
         RandomGrid
     };
+
+    typedef std::unordered_map<States, State*> StateMap;
 
     class Controller {
     public:
@@ -38,15 +41,15 @@ namespace fsm {
         }
 
     private:
-        static inline std::unordered_map<States, State*>* InitialiseStateMap() {
-            std::unordered_map<States, State*>* allStates = new std::unordered_map<States, State*>;
+        static inline StateMap* InitialiseStateMap() {
+            auto* allStates = new StateMap;
             (*allStates)[MainMenu] = new screen::MainMenu();
             (*allStates)[RandomGrid] = new screen::RandomGrid();
 
             return allStates;
         }
 
-        static inline std::unordered_map<States, State*>* m_allStates = InitialiseStateMap();
+        static inline StateMap* m_allStates = InitialiseStateMap();
 
         Controller() = default;
 
