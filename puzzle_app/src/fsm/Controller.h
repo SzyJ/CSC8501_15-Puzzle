@@ -30,11 +30,16 @@ namespace fsm {
         }
 
     private:
-        static std::unordered_map<States, State*> m_allStates;
+        static inline std::unordered_map<States, State*> InitialiseStateMap() {
+            std::unordered_map<States, State*> allStates;
+            allStates[MainMenu] = new ui::MainMenu();
 
-        Controller() {
-            m_allStates[MainMenu] = new ui::MainMenu;
+            return allStates;
         }
+
+        static inline std::unordered_map<States, State*> m_allStates = InitialiseStateMap();
+
+        Controller() = default;
 
     };
 

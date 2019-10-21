@@ -14,7 +14,7 @@ namespace fsm {
         }
 
         void SetInitialState(State* newState) {
-            if (!m_CurrentState) {
+            if (m_CurrentState != nullptr) {
                 return;
             }
 

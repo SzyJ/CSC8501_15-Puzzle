@@ -10,14 +10,8 @@
 #include "fsm/Controller.h"
 
 int main() {
-//
 //    std::cout << Peng::Math::Factorial(10);
-//
-//
-//
-//    ui::MainMenu mainMenu;
-//    mainMenu.Show();
-//
+
     fsm::Controller::Get().Start(fsm::States::MainMenu);
 
     return 0;
