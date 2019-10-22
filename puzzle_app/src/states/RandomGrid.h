@@ -2,11 +2,14 @@
 // 
 // Project: puzzle_app
 // File: RandomGrid.h
-// Date: 21/10/2019
+// Date: 22/10/2019
 
 #pragma once
 #include "fsm/State.h"
+
+#include <peng/grid/Grid.h>
 #include <Fixtures/Prompt.h>
+#include <Fixtures/Menu.h>
 
 namespace screen {
 
@@ -15,11 +18,15 @@ namespace screen {
         RandomGrid();
         ~RandomGrid();
 
-        int GetUserChoice();
-
     private:
         WinTUI::Prompt* m_NumberPrompt;
+        WinTUI::Menu* m_PrintToFileMenu;
 
+        int GetUserChoice();
+
+        static void GenerateGrid(Peng::Grid<int>& tileGrid, int numbersFrom, int numbersTo);
+
+        void GenerateAndPrintGrids(std::stringstream& stream, int generateCount, int numberFrom, int numberTo);
         virtual void OnEnter() override;
 
     };
