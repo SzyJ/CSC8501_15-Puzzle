@@ -22,8 +22,7 @@ TEST(TestGrid, Test4x4Assignment) {
             }
 
             // Same Value stored in different memory locations
-            ASSERT_EQ(sampleGrid[xInd + (yInd * 4)], *(grid.GetValue(xInd, yInd)));
-            ASSERT_NE(sampleGrid + (xInd + (yInd * 4)), grid.GetValue(xInd, yInd));
+            ASSERT_EQ(sampleGrid[xInd + (yInd * 4)], grid.GetValue(xInd, yInd));
         }
     }
 
