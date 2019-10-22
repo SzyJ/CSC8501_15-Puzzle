@@ -34,7 +34,7 @@ namespace Peng {
             }
         }
 
-        ~RandomSession();
+        ~RandomSession() = default;
 
         int GetNew(bool& success);
         int GetNew();

@@ -25,10 +25,11 @@ namespace Peng {
     }
 
     int RandomSession::GetNew() {
-        int nextIndex = Random::GetInt(m_RemainingNumbers.size());
+        int nextIndex = Random::GetInt(static_cast<int>(m_RemainingNumbers.size()));
 
         auto it = m_RemainingNumbers.begin();
-        for (int i = 0; i < nextIndex; ++nextIndex, ++it) {}
+
+        std::advance(it, nextIndex);
 
         auto test = m_RemainingNumbers.extract(it);
 
