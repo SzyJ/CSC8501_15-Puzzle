@@ -14,8 +14,6 @@ namespace screen {
         GridLoader();
         ~GridLoader();
 
-
-
     private:
         virtual void OnEnter() override;
 

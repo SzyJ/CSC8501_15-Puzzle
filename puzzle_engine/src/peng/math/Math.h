@@ -11,9 +11,9 @@ namespace Peng {
     class Math {
     public:
 
-        static int Factorial(int number);
+        static unsigned long long Factorial(int number);
 
-        static int Combination(int n, int r);
+        static int Combination(unsigned long long n, unsigned long long r);
 
         static int Pow2(int pow);
 

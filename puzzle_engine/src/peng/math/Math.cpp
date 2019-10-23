@@ -8,7 +8,7 @@
 
 namespace Peng {
 
-    int Math::Factorial(int number) {
+    unsigned long long Math::Factorial(int number) {
         if (number <= 1) {
             return 1;
         }
@@ -20,7 +20,7 @@ namespace Peng {
         return number * Factorial(number - 1);
     }
 
-    int Math::Combination(int n, int r) {
+    int Math::Combination(unsigned long long n, unsigned long long r) {
         int val = 0;
 
         if (n == r) {

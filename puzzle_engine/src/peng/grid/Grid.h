@@ -30,7 +30,7 @@ namespace Peng {
             m_SeqLength = size;
         }
 
-        void SetTiles(const T* tiles, int size) {
+        void SetTiles(T* tiles, int size) {
             m_Size = size;
             m_SeqLength = size;
             const unsigned int tileCount = (m_Size * m_Size) - 1;
@@ -44,7 +44,7 @@ namespace Peng {
             return m_TileState[PENG_POS(xIndex, yIndex)];
         }
 
-        const int GetSize() {
+        int GetSize() const {
             return m_Size;
         }
 
