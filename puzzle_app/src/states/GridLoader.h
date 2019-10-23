@@ -7,6 +7,10 @@
 #pragma once
 #include "fsm/State.h"
 
+#include <Fixtures/Menu.h>
+
+#include <string>
+
 namespace screen {
 
     class GridLoader : public fsm::State {
@@ -14,11 +18,16 @@ namespace screen {
         GridLoader();
         ~GridLoader();
 
-
-
     private:
+        WinTUI::Menu* m_PrintToFileMenu;
+
+        static bool EmptyString(std::string& str);
+
         virtual void OnEnter() override;
 
+
+
+        void ParseFile(const char* filePath, std::stringstream& stream);
     };
 
 }

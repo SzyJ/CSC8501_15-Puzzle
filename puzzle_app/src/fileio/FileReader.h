@@ -15,7 +15,7 @@ namespace fileio {
 
     class FileReader {
     public:
-        FileReader() = delete;
+        FileReader() = default;
 
         bool ReadFile(const char* filepath) {
             std::ifstream file(filepath);
@@ -29,9 +29,10 @@ namespace fileio {
             }
 
             file.close();
+            return true;
         }
 
-        FileLines GetFileLines() { return fileLines; }
+        FileLines& GetFileLines() { return fileLines; }
 
     private:
         FileLines fileLines;
