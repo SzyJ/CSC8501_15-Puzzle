@@ -19,3 +19,11 @@ TEST(TestMath, CombinationTest) {
     EXPECT_EQ(0,  Peng::Math::Combination(6,15));
     EXPECT_EQ(1,  Peng::Math::Combination(10,10));
 }
+
+TEST(TestMath, Pow2Test) {
+    EXPECT_EQ(16, Peng::Math::Pow2(4));
+    EXPECT_EQ(8, Peng::Math::Pow2(3));
+    EXPECT_EQ(4, Peng::Math::Pow2(2));
+    EXPECT_EQ(2, Peng::Math::Pow2(1));
+    EXPECT_EQ(1, Peng::Math::Pow2(0));
+}

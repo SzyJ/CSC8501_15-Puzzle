@@ -15,6 +15,8 @@ namespace Peng {
 
         static int Combination(int n, int r);
 
+        static int Pow2(int pow);
+
     };
 
 }

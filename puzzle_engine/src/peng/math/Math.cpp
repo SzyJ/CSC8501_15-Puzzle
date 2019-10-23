@@ -33,4 +33,8 @@ namespace Peng {
         return Factorial(n) / (Factorial(r) * Factorial(n - r));
     }
 
+    int Math::Pow2(int pow) {
+        return (1 << pow);
+    }
+
 }
