@@ -8,15 +8,19 @@
 #include "Utils/Color.h"
 #include "fsm/Controller.h"
 #include <peng/math/Random.h>
+#include <Utils/Keyboard.h>
 
 #include <cctype>
 #include <cmath>
 #include <sstream>
-#include <math.h>
+#include <fileio/FileWriter.h>
 
 #define GET_DIGITS(x) ((int) floor(log10(x)))
 #define MAX_GRID_COUNT 99999999
 #define GRID_SIZE 4
+#define MENU_POSITIVE_OPTION 0
+#define SAVE_FILE_LOCATION "./15_files/random_puzzle.15f"
+
 
 namespace screen {
 
@@ -142,6 +146,20 @@ namespace screen {
         });
 
         m_PrintToFileMenu->Show(std::cout);
+
+        if (m_PrintToFileMenu->GetLastSelected() == MENU_POSITIVE_OPTION) {
+            bool success = fileio::FileWriter::WriteToFile(SAVE_FILE_LOCATION, stream);
+            std::cout << std::endl;
+            if (success) {
+                std::cout << "Saved successfully to: \"" << SAVE_FILE_LOCATION << "\"" << std::endl;
+            } else {
+                std::cout << "Failed to save. Is \"" << SAVE_FILE_LOCATION << "\" open elsewhere?" << std::endl;
+            }
+
+            WinTUI::Keyboard::WaitForKey();
+        }
+
+       
 
         fsm::Controller::Get().GoTo(fsm::States::MainMenu);
     }

@@ -15,7 +15,7 @@ namespace fileio {
 
     class FileWriter {
     public:
-        bool WriteToFile(const char* filepath, std::stringstream payload) {
+        static bool WriteToFile(const char* filepath, std::stringstream& payload) {
             std::ofstream file(filepath);
             if (!file.is_open()) {
                 return false;
