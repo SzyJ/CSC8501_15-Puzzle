@@ -54,7 +54,7 @@ namespace Peng {
     private:
         unsigned int m_Size = 0, m_SeqLength= 0;
 
-        T* m_TileState;
+        T* m_TileState = nullptr;
         std::vector<T*> m_Subsequences;
 
     };

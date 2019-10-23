@@ -22,6 +22,8 @@ namespace screen {
             break;
         case build:
         case load:
+            fsm::Controller::Get().GoTo(fsm::States::GridLoader);
+            break;
         case exit:
         default:
             break;

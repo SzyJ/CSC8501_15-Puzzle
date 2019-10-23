@@ -8,7 +8,6 @@
 
 #include <sstream>
 #include <fstream>
-#include <functional>
 #include <string>
 
 namespace fileio {

@@ -3,6 +3,7 @@
 #include "fsm/Machine.h"
 #include "states/MainMenu.h"
 #include "states/RandomGrid.h"
+#include "states/GridLoader.h"
 
 #include <unordered_map>
 
@@ -11,7 +12,8 @@ namespace fsm {
 
     enum States {
         MainMenu,
-        RandomGrid
+        RandomGrid,
+        GridLoader
     };
 
     typedef std::unordered_map<States, State*> StateMap;
@@ -45,6 +47,7 @@ namespace fsm {
             auto* allStates = new StateMap;
             (*allStates)[MainMenu] = new screen::MainMenu();
             (*allStates)[RandomGrid] = new screen::RandomGrid();
+            (*allStates)[GridLoader] = new screen::GridLoader();
 
             return allStates;
         }
