@@ -21,6 +21,8 @@ namespace screen {
             fsm::Controller::Get().GoTo(fsm::States::RandomGrid);
             break;
         case build:
+            fsm::Controller::Get().GoTo(fsm::States::GridBuilder);
+            break;
         case load:
             fsm::Controller::Get().GoTo(fsm::States::GridLoader);
             break;
