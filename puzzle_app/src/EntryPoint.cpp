@@ -21,7 +21,7 @@ int main() {
     //
     //grid.SetTiles(tileArray, 4);
     //
-    //std::cout << "Grid Solutions: " << Peng::GridSolver::Do<int>(grid);
+    //std::cout << "Grid Solutions: " << Peng::GridSolver::CountAll<int>(grid);
 
     return 0;
 }

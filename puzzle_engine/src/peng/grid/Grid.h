@@ -20,7 +20,9 @@ namespace Peng {
     public:
         Grid() = default;
 
-        Grid(const Grid& copy) = delete;
+        Grid(const Grid& copy) {
+            SetTiles(copy.m_Tiles, copy.GetWidth(), copy.GetHeight());
+        };
 
         ~Grid() {
             delete[] m_Tiles;
@@ -40,7 +42,7 @@ namespace Peng {
             FindSubsequences();
         }
 
-        T GetValue(unsigned int xIndex, unsigned int yIndex) {
+        T GetValue(unsigned int xIndex, unsigned int yIndex) const {
             return m_Tiles[PENG_POS(xIndex, yIndex)];
         }
 

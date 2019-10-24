@@ -2,53 +2,122 @@
 // 
 // Project: puzzle_engine
 // File: GridSolver.h
-// Date: 23/10/2019
+// Date: 24/10/2019
 
 #pragma once
 #include "peng/grid/Grid.h"
 #include "peng/math/Math.h"
-
 
 namespace Peng {
 
     class GridSolver {
     public:
         template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-        static void Do(const Grid<T>& grid, const unsigned int sequenceLength, unsigned long& horizontalSeq, unsigned long& verticalSeq) {
-            unsigned int w; // Width of the grid
-            unsigned int h; // Height of the grid
-            unsigned int s; // Sequence Length
-            unsigned int c; // Ways of making the sequence
-            unsigned long long r; // Ways of arranging remaining tiles
+        static void CountAll(const Grid<T>& grid, const unsigned int sequenceLength, unsigned long long& horizontalSeq, unsigned long long& verticalSeq) {
+            unsigned int width; // Width of the grid
+            unsigned int height; // Height of the grid
+            unsigned int sequenceLen; // Sequence Length
+            unsigned int subsequenceCombinations; // Ways of making the sequence
+            unsigned long long arrangements; // Ways of arranging remaining tiles
             unsigned int ah; // Available places horizontally
             unsigned int av; // Available places vertically
 
-            w = grid.GetWidth();
-            h = grid.GetHeight();
-            s = sequenceLength;
-            c = grid.GetSubsequenceCombinations(sequenceLength);
-            r = static_cast<unsigned long long>(Math::Factorial(((w * h) - 1) - s) / 2);
+            width = grid.GetWidth();
+            height = grid.GetHeight();
+            sequenceLen = sequenceLength;
+            subsequenceCombinations = grid.GetSubsequenceCombinations(sequenceLength);
+            arrangements = static_cast<unsigned long long>(Math::Factorial(((width * height) - 1) - sequenceLen) / 2);
 
             // Horizontal places
-            if (s == w) {
-                ah = h - 1;
-            } else if (s < w) {
-                ah = ((w - s + 1) * (h - 1)) + (w - s);
+            if (sequenceLen == width) {
+                ah = height - 1;
+            } else if (sequenceLen < width) {
+                ah = ((width - sequenceLen + 1) * (height - 1)) + (width - sequenceLen);
             } else {
                 ah = 0;
             }
 
             // Vertical places
-            if (s == h) {
-                av = w - 1;
-            } else if (s < h) {
-                av = ((h - s + 1) * (w - 1)) + (h - s);
+            if (sequenceLen == height) {
+                av = width - 1;
+            } else if (sequenceLen < height) {
+                av = ((height - sequenceLen + 1) * (width - 1)) + (height - sequenceLen);
             } else {
                 av = 0;
             }
 
-            horizontalSeq = ah * r * c;
-            verticalSeq = av * r * c;
+            horizontalSeq = ah * arrangements * subsequenceCombinations;
+            verticalSeq = av * arrangements * subsequenceCombinations;
+        }
+
+        template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+        static void CountThis(const Grid<T>& grid, const unsigned int sequenceLength, unsigned long& total) {
+            unsigned int width; // Width of the grid
+            unsigned int height; // Height of the grid
+
+            width = grid.GetWidth();
+            height = grid.GetHeight();
+
+            total = 0;
+
+            T lastVal = -1;
+
+            int currentSequence = 1;
+
+            for (unsigned int gridY = 0; gridY < height; ++gridY) {
+                for (unsigned int gridX = 0; gridX < width; ++gridX) {
+                    if (gridY == height - 1 && gridX == width - 1) {
+                        break;
+                    }
+
+                    if (lastVal < 0) {
+                        lastVal = grid.GetValue(gridX, gridY);
+                        continue;
+                    }
+
+                    T thisVal;
+                    if ((thisVal = grid.GetValue(gridX, gridY)) == lastVal + 1) {
+                        ++currentSequence;
+                        lastVal = thisVal;
+                    } else {
+                        if (currentSequence >= sequenceLength) {
+                            total += (currentSequence - sequenceLength + 1) * 2;
+                        }
+                        currentSequence = 1;
+                        lastVal = thisVal;
+                    }
+                }
+
+                lastVal = -1;
+            }
+
+            for (unsigned int gridX = 0; gridX < width; ++gridX) {
+                for (unsigned int gridY = 0; gridY < height; ++gridY) {
+                    if (gridX == width - 1 && gridY == height - 1) {
+                        break;
+                    }
+
+                    if (lastVal < 0) {
+                        lastVal = grid.GetValue(gridX, gridY);
+                        continue;
+                    }
+
+                    int thisVal;
+                    if ((thisVal = grid.GetValue(gridX, gridY)) == lastVal + 1) {
+                        ++currentSequence;
+                        lastVal = thisVal;
+                    } else {
+                        if (currentSequence >= sequenceLength) {
+                            total += (currentSequence - sequenceLength + 1) * 2;
+                        }
+                        currentSequence = 1;
+                        lastVal = thisVal;
+                    }
+                }
+
+                lastVal = -1;
+            }
+
         }
 
     };

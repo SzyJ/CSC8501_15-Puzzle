@@ -7,6 +7,7 @@
 #pragma once
 #include "fsm/State.h"
 
+#include <peng/grid/Grid.h>
 #include <Fixtures/Menu.h>
 
 #include <string>
@@ -25,6 +26,8 @@ namespace screen {
 
         void ParseFile(const char* filePath, std::stringstream& stream) const;
         static std::string GetUserChosenFile(const char* dirPath);
+        static void PrintGridSolutions(Peng::Grid<int>* grid, std::stringstream& stream);
+
 
         virtual void OnEnter() override;
 

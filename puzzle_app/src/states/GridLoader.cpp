@@ -2,7 +2,7 @@
 // 
 // Project: puzzle_app
 // File: GridLoader.cpp
-// Date: 23/10/2019
+// Date: 24/10/2019
 
 #include "GridLoader.h"
 #include "fileio/FileReader.h"
@@ -10,7 +10,7 @@
 #include "fileio/Defaults.h"
 #include "fsm/Controller.h"
 
-#include <peng/grid/Grid.h>
+
 #include <peng/grid/GridSolver.h>
 #include <Utils/Keyboard.h>
 #include <Utils/Color.h>
@@ -19,13 +19,9 @@
 #include <algorithm>
 #include <sstream>
 #include <filesystem>
+#include <thread>
 
 #define DEFAULT_GRID_SIZE 4
-#define MENU_POSITIVE_OPTION 0
-
-#define FILE_LOCATION "./15_files/random_puzzle.15f"
-#define SAVE_FILENAME "puzzle_solution.15f"
-
 
 namespace screen {
 
@@ -41,19 +37,19 @@ namespace screen {
         m_PrintToFileMenu->SetSelectedBefore([](std::ostream& ostream) {
             ostream << "* ";
             WinTUI::Color::SetConsoleColor(WTUI_LIGHT_GREEN);
-            });
+        });
         m_PrintToFileMenu->SetSelectedAfter([](std::ostream& ostream) {
             WinTUI::Color::ResetConsoleColor();
             ostream << " *";
-            });
+        });
 
         m_PrintToFileMenu->SetUnselectedBefore([](std::ostream& ostream) {
             ostream << "  ";
-            });
+        });
 
         m_PrintToFileMenu->SetUnselectedAfter([](std::ostream& ostream) {
             ostream << "  ";
-            });
+        });
     }
 
     GridLoader::~GridLoader() {
@@ -84,8 +80,10 @@ namespace screen {
 
         stream << gridCount << std::endl;
 
+        std::vector<std::stringstream*> streams;
+        std::vector<std::thread*> threadPool;
         for (int currentGrid = 0; currentGrid < gridCount; ++currentGrid) {
-            Peng::Grid<int> thisGrid;
+            auto* thisGrid = new Peng::Grid<int>();
 
             int tileArray[(DEFAULT_GRID_SIZE * DEFAULT_GRID_SIZE) - 1];
             int arrayStepper = 0;
@@ -98,18 +96,49 @@ namespace screen {
                     tileArray[arrayStepper++] = std::stoi(token);
                 }
             }
-            thisGrid.SetTiles(tileArray, DEFAULT_GRID_SIZE);
+            thisGrid->SetTiles(tileArray, DEFAULT_GRID_SIZE);
 
-            unsigned long horizontalSeq;
-            unsigned long verticalSeq;
-            Peng::GridSolver::Do(thisGrid, 3, horizontalSeq, verticalSeq);
-            stream << thisGrid;
-            stream << "row = " << horizontalSeq << std::endl;
-            stream << "column = " << verticalSeq << std::endl;
-            stream << "reverse row = " << horizontalSeq << std::endl;
-            stream << "reverse column = " << verticalSeq << std::endl;
+            streams.emplace_back(new std::stringstream);
+            std::stringstream* thisStream = streams.back();
+
+            std::thread* thisThread = new std::thread([=] { PrintGridSolutions(thisGrid, *thisStream); });
+            threadPool.push_back(thisThread);
+        }
+
+        for (std::thread* t : threadPool) {
+            t->join();
+            delete t;
+        }
+
+        for (std::stringstream* ss : streams) {
+            stream << ss->str();
+            delete ss;
             stream << std::endl;
         }
+    }
+
+    void GridLoader::PrintGridSolutions(Peng::Grid<int>* grid, std::stringstream& stream) {
+        unsigned long long horizontalSeq;
+        unsigned long long verticalSeq;
+        Peng::GridSolver::CountAll(*grid, DEFAULT_GRID_SIZE, horizontalSeq, verticalSeq);
+        stream << *grid;
+        stream << "row = " << horizontalSeq << std::endl;
+        stream << "column = " << verticalSeq << std::endl;
+        stream << "reverse row = " << horizontalSeq << std::endl;
+        stream << "reverse column = " << verticalSeq << std::endl;
+        stream << "(total for row and column, including reverse, in this configuration)" << std::endl;
+        unsigned long thisConfigTotal;
+        for (int seqLen = 2; seqLen <= DEFAULT_GRID_SIZE; ++seqLen) {
+            Peng::GridSolver::CountThis(*grid, seqLen, thisConfigTotal);
+            stream << seqLen << " = " << thisConfigTotal << std::endl;
+        }
+        stream << "(total for row and column, including reverse, for all valid turns)" << std::endl;
+        for (int seqLen = 2; seqLen <= DEFAULT_GRID_SIZE; ++seqLen) {
+            Peng::GridSolver::CountAll(*grid, seqLen, horizontalSeq, verticalSeq);
+            stream << seqLen << " = " << ((horizontalSeq + verticalSeq) * 2) << std::endl;
+        }
+
+        delete grid;
     }
 
     std::string GridLoader::GetUserChosenFile(const char* dirPath) {
@@ -134,23 +163,23 @@ namespace screen {
         WinTUI::Menu fileSelector(fileChoices, fileCount);
         fileSelector.SetFixtureBefore([](std::ostream& ostream) {
             ostream << "Which file would you like to load?" << std::endl;
-            });
+        });
         fileSelector.SetSelectedBefore([](std::ostream& ostream) {
             ostream << "* ";
             WinTUI::Color::SetConsoleColor(WTUI_LIGHT_GREEN);
-            });
+        });
         fileSelector.SetSelectedAfter([](std::ostream& ostream) {
             WinTUI::Color::ResetConsoleColor();
             ostream << " *";
-            });
+        });
 
         fileSelector.SetUnselectedBefore([](std::ostream& ostream) {
             ostream << "  ";
-            });
+        });
 
         fileSelector.SetUnselectedAfter([](std::ostream& ostream) {
             ostream << "  ";
-            });
+        });
 
         fileSelector.Show(std::cout);
 

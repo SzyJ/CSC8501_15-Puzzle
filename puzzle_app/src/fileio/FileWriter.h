@@ -80,7 +80,7 @@ namespace fileio {
                 if (success) {
                     std::cout << "Saved successfully to: \"" << filePath << "\"" << std::endl;
                 } else {
-                    std::cout << "Failed to save. Is \"" << filePath << "\" open elsewhere?" << std::endl;
+                    std::cout << "Failed to save. Does \"" << dirPath << "\" directory exist?" << std::endl;
                 }
 
                 WinTUI::Keyboard::WaitForKey();
