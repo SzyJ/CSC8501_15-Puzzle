@@ -6,6 +6,8 @@
 
 #include <cctype>
 #include <sstream>
+#include <unordered_set>
+#include <algorithm>
 
 #define GRID_SIZE 4
 #define NUMBER_INPUT_MIN 0
@@ -148,9 +150,44 @@ namespace screen {
             });
     }
 
+    bool GridBuilder::ValidateGridMatrix(int* array, int length, std::stringstream& info) {
+        std::unordered_set<int> foundVals;
+        for (int ind = 0; ind < (length - 1); ++ind) {
+            int thisVal = array[ind];
+            if (foundVals.find(thisVal) != foundVals.end()) {
+                info << "Duplicate value found: " << thisVal;
+                return false;
+            }
+            foundVals.insert(thisVal);
+        }
+
+        if (array[length - 1] >= 0) {
+            info << "Bottom-Right value is not a empty space in this configuration";
+            return false;
+        }
+
+        return true;
+    }
 
     void GridBuilder::OnEnter() {
-        m_GridBuilder->Show(std::cout);
+        std::stringstream infoStream;
+        bool validGrid = false;
+
+        while (!validGrid) {
+            m_GridBuilder->Show(std::cout);
+            infoStream.str(std::string());
+            if (ValidateGridMatrix(m_GridBuilder->GetMatrixArray(), GRID_SIZE * GRID_SIZE, infoStream)) {
+                validGrid = true;
+            } else {
+                WinTUI::Color::SetConsoleColor(WTUI_WHITE, WTUI_RED);
+                std::cout << infoStream.str();
+                WinTUI::Color::ResetConsoleColor();
+                std::cout << std::endl;
+
+                WinTUI::Keyboard::WaitForKey();
+            }
+        }
+        
 
         fsm::Controller::Get().GoTo(fsm::States::MainMenu);
     }
