@@ -1,8 +1,10 @@
 #include "GridBuilder.h"
 #include "fsm/Controller.h"
+#include "fileio/FileWriter.h"
 
 #include <Utils/Color.h>
 #include <Utils/Keyboard.h>
+#include <peng/grid/Grid.h>
 
 #include <cctype>
 #include <sstream>
@@ -12,6 +14,9 @@
 #define GRID_SIZE 4
 #define NUMBER_INPUT_MIN 0
 #define NUMBER_INPUT_MAX 20
+#define MENU_POSITIVE_OPTION 0
+
+#define SAVE_FILE_LOCATION "./15_files/random_puzzle.15f"
 
 #define GET_DIGITS(x) ((int) floor(log10(x)))
 
@@ -30,14 +35,12 @@ namespace screen {
     }
 
     void GridBuilder::ConfigureMatrixPrompt() {
+        prompt = std::string("Enter a number between ");
+        prompt.append(std::to_string(NUMBER_INPUT_MIN));
+        prompt.append(" and ");
+        prompt.append(std::to_string(NUMBER_INPUT_MAX));
 
-        std::stringstream prompt;
-        prompt << "Enter a number between ";
-        prompt << NUMBER_INPUT_MIN;
-        prompt << " and ";
-        prompt << NUMBER_INPUT_MAX;
-
-        m_MatrixInput = new WinTUI::Prompt(prompt.str().c_str());
+        m_MatrixInput = new WinTUI::Prompt(prompt.c_str());
 
         m_MatrixInput->SetSelectedBefore([](std::ostream& ostream) {
             WinTUI::Color::SetConsoleColor(WTUI_LIGHT_GREEN);
@@ -115,7 +118,7 @@ namespace screen {
 
         m_GridBuilder->SetWarning([](std::ostream& ostream) {
             WinTUI::Color::SetConsoleColor(WTUI_WHITE, WTUI_RED);
-            ostream << "Enter a positive number between << " << NUMBER_INPUT_MIN << " and " << NUMBER_INPUT_MAX << std::endl;
+            ostream << "Enter a positive number between " << NUMBER_INPUT_MIN << " and " << NUMBER_INPUT_MAX << std::endl;
             });
 
         ConfigureMatrixPrompt();
@@ -171,12 +174,15 @@ namespace screen {
 
     void GridBuilder::OnEnter() {
         std::stringstream infoStream;
+        std::stringstream stream;
         bool validGrid = false;
+
+        int* numArray;
 
         while (!validGrid) {
             m_GridBuilder->Show(std::cout);
             infoStream.str(std::string());
-            if (ValidateGridMatrix(m_GridBuilder->GetMatrixArray(), GRID_SIZE * GRID_SIZE, infoStream)) {
+            if (ValidateGridMatrix((numArray = m_GridBuilder->GetMatrixArray()), GRID_SIZE * GRID_SIZE, infoStream)) {
                 validGrid = true;
             } else {
                 WinTUI::Color::SetConsoleColor(WTUI_WHITE, WTUI_RED);
@@ -187,7 +193,33 @@ namespace screen {
                 WinTUI::Keyboard::WaitForKey();
             }
         }
-        
+
+        Peng::Grid<int> grid;
+        grid.SetTiles(numArray, GRID_SIZE);
+        stream << 1 << std::endl;
+        stream << grid;
+
+        const char* question = "\nWould you like to save these grids to a file?\n";
+
+        m_PrintToFileMenu->SetFixtureBefore([=, &stream, &question](std::ostream& ostream) {
+            ostream << stream.str();
+            ostream << question;
+            });
+
+        m_PrintToFileMenu->Show(std::cout);
+
+        if (m_PrintToFileMenu->GetLastSelected() == MENU_POSITIVE_OPTION) {
+            bool success = fileio::FileWriter::WriteToFile(SAVE_FILE_LOCATION, stream);
+            std::cout << std::endl;
+            if (success) {
+                std::cout << "Saved successfully to: \"" << SAVE_FILE_LOCATION << "\"" << std::endl;
+            }
+            else {
+                std::cout << "Failed to save. Is \"" << SAVE_FILE_LOCATION << "\" open elsewhere?" << std::endl;
+            }
+
+            WinTUI::Keyboard::WaitForKey();
+        }
 
         fsm::Controller::Get().GoTo(fsm::States::MainMenu);
     }

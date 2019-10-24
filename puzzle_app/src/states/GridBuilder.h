@@ -13,6 +13,7 @@ namespace screen {
         ~GridBuilder();
 
     private:
+        std::string prompt;
         WinTUI::Prompt* m_MatrixInput = nullptr;
         WinTUI::Matrix<int>* m_GridBuilder = nullptr;
         WinTUI::Menu* m_PrintToFileMenu = nullptr;
