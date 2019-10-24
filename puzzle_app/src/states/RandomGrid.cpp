@@ -16,10 +16,10 @@
 #include <fileio/FileWriter.h>
 
 #define GET_DIGITS(x) ((int) floor(log10(x)))
-#define MAX_GRID_COUNT 99999999
+#define MAX_GRID_COUNT 10
 #define GRID_SIZE 4
-#define MENU_POSITIVE_OPTION 0
-#define SAVE_FILE_LOCATION "./15_files/random_puzzle.15f"
+
+#define DEFAULT_FILENAME "random_puzzle.15f"
 
 
 namespace screen {
@@ -66,37 +66,11 @@ namespace screen {
             }
 
         });
-
-        const char* menuOptions[] = {
-            "Yes",
-            "No"
-        };
-
-        m_PrintToFileMenu = new WinTUI::Menu(menuOptions, 2);
-
-        m_PrintToFileMenu->SetSelectedBefore([](std::ostream& ostream) {
-            ostream << "* ";
-            WinTUI::Color::SetConsoleColor(WTUI_LIGHT_GREEN);
-        });
-        m_PrintToFileMenu->SetSelectedAfter([](std::ostream& ostream) {
-            WinTUI::Color::ResetConsoleColor();
-            ostream << " *";
-        });
-
-        m_PrintToFileMenu->SetUnselectedBefore([](std::ostream& ostream) {
-            ostream << "  ";
-        });
-
-        m_PrintToFileMenu->SetUnselectedAfter([](std::ostream& ostream) {
-            ostream << "  ";
-        });
     }
-
 
     RandomGrid::~RandomGrid() {
         delete m_NumberPrompt;
     }
-
 
     int RandomGrid::GetUserChoice() {
         int gridsToGenerate;
@@ -107,7 +81,6 @@ namespace screen {
 
         return gridsToGenerate;
     }
-
 
     void RandomGrid::GenerateGrid(Peng::Grid<int>& tileGrid, int numbersFrom, int numbersTo) {
         const unsigned int tileCount = (GRID_SIZE * GRID_SIZE) - 1;
@@ -138,28 +111,8 @@ namespace screen {
         int gridCount = GetUserChoice();
         std::stringstream stream;
         GenerateAndPrintGrids(stream, gridCount, 0, 20);
-        const char* question = "\nWould you like to save these grids to a file?\n";
 
-        m_PrintToFileMenu->SetFixtureBefore([=, &stream, &question](std::ostream& ostream) {
-            ostream << stream.str();
-            ostream << question;
-        });
-
-        m_PrintToFileMenu->Show(std::cout);
-
-        if (m_PrintToFileMenu->GetLastSelected() == MENU_POSITIVE_OPTION) {
-            bool success = fileio::FileWriter::WriteToFile(SAVE_FILE_LOCATION, stream);
-            std::cout << std::endl;
-            if (success) {
-                std::cout << "Saved successfully to: \"" << SAVE_FILE_LOCATION << "\"" << std::endl;
-            } else {
-                std::cout << "Failed to save. Is \"" << SAVE_FILE_LOCATION << "\" open elsewhere?" << std::endl;
-            }
-
-            WinTUI::Keyboard::WaitForKey();
-        }
-
-       
+        fileio::FileWriter::PromptToSave(stream, DEFAULT_FILENAME);
 
         fsm::Controller::Get().GoTo(fsm::States::MainMenu);
     }

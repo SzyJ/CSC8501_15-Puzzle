@@ -23,11 +23,11 @@ namespace screen {
 
         static bool EmptyString(std::string& str);
 
+        void ParseFile(const char* filePath, std::stringstream& stream) const;
+        static std::string GetUserChosenFile(const char* dirPath);
+
         virtual void OnEnter() override;
 
-
-
-        void ParseFile(const char* filePath, std::stringstream& stream);
     };
 
 }

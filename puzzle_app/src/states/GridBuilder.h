@@ -1,3 +1,9 @@
+// Author: Szymon Jackiewicz
+// 
+// Project: puzzle_app
+// File: GridBuilder.h
+// Date: 24/10/2019
+
 #pragma once
 
 #include "fsm/State.h"
@@ -14,20 +20,17 @@ namespace screen {
 
     private:
         std::string prompt;
+
         WinTUI::Prompt* m_MatrixInput = nullptr;
+
         WinTUI::Matrix<int>* m_GridBuilder = nullptr;
-        WinTUI::Menu* m_PrintToFileMenu = nullptr;
 
         static bool ValidateGridMatrix(int* array, int length, std::stringstream& info);
 
         inline void ConfigureMatrixPrompt();
         inline void ConfigureGridBuilder();
-        inline void ConfigurePrintMenu();
 
         virtual void OnEnter() override;
-
-
     };
 
 }
-

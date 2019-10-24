@@ -7,6 +7,7 @@
 #include "GridLoader.h"
 #include "fileio/FileReader.h"
 #include "fileio/FileWriter.h"
+#include "fileio/Defaults.h"
 #include "fsm/Controller.h"
 
 #include <peng/grid/Grid.h>
@@ -17,12 +18,13 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
+#include <filesystem>
 
 #define DEFAULT_GRID_SIZE 4
 #define MENU_POSITIVE_OPTION 0
 
 #define FILE_LOCATION "./15_files/random_puzzle.15f"
-#define SAVE_FILE_LOCATION "./15_files/puzzle_solution.15f"
+#define SAVE_FILENAME "puzzle_solution.15f"
 
 
 namespace screen {
@@ -58,40 +60,11 @@ namespace screen {
         delete m_PrintToFileMenu;
     }
 
-    void GridLoader::OnEnter() {
-
-        std::stringstream stream;
-
-        ParseFile(FILE_LOCATION, stream);
-
-        const char* question = "\nWould you like to save these solutions to a file?\n";
-        m_PrintToFileMenu->SetFixtureBefore([=, &stream, &question](std::ostream& ostream) {
-            ostream << stream.str();
-            ostream << question;
-            });
-        m_PrintToFileMenu->Show(std::cout);
-
-        if (m_PrintToFileMenu->GetLastSelected() == MENU_POSITIVE_OPTION) {
-            bool success = fileio::FileWriter::WriteToFile(SAVE_FILE_LOCATION, stream);
-            std::cout << std::endl;
-            if (success) {
-                std::cout << "Saved successfully to: \"" << SAVE_FILE_LOCATION << "\"" << std::endl;
-            }
-            else {
-                std::cout << "Failed to save. Is \"" << SAVE_FILE_LOCATION << "\" open elsewhere?" << std::endl;
-            }
-
-            WinTUI::Keyboard::WaitForKey();
-        }
-
-        fsm::Controller::Get().GoTo(fsm::States::MainMenu);
-    }
-
     bool GridLoader::EmptyString(std::string& str) {
         return str.empty() || (std::all_of(str.begin(), str.end(), isspace));
     }
 
-    void GridLoader::ParseFile(const char* filePath, std::stringstream& stream) {
+    void GridLoader::ParseFile(const char* filePath, std::stringstream& stream) const {
         fileio::FileReader file;
 
         bool readSuccess = file.ReadFile(filePath);
@@ -137,6 +110,80 @@ namespace screen {
             stream << "reverse column = " << verticalSeq << std::endl;
             stream << std::endl;
         }
+    }
+
+    std::string GridLoader::GetUserChosenFile(const char* dirPath) {
+        std::vector<std::string> allFiles;
+
+        for (const auto& file : std::filesystem::directory_iterator(dirPath)) {
+            if (file.is_regular_file()) {
+                allFiles.push_back(file.path().filename().string());
+            }
+        }
+        if (allFiles.empty()) {
+            return std::string();
+        }
+
+        const char** fileChoices = new const char*[allFiles.size()];
+
+        const int fileCount = allFiles.size();
+        for (int fileInd = 0; fileInd < fileCount; ++fileInd) {
+            fileChoices[fileInd] = allFiles.at(fileInd).c_str();
+        }
+
+        WinTUI::Menu fileSelector(fileChoices, fileCount);
+        fileSelector.SetFixtureBefore([](std::ostream& ostream) {
+            ostream << "Which file would you like to load?" << std::endl;
+            });
+        fileSelector.SetSelectedBefore([](std::ostream& ostream) {
+            ostream << "* ";
+            WinTUI::Color::SetConsoleColor(WTUI_LIGHT_GREEN);
+            });
+        fileSelector.SetSelectedAfter([](std::ostream& ostream) {
+            WinTUI::Color::ResetConsoleColor();
+            ostream << " *";
+            });
+
+        fileSelector.SetUnselectedBefore([](std::ostream& ostream) {
+            ostream << "  ";
+            });
+
+        fileSelector.SetUnselectedAfter([](std::ostream& ostream) {
+            ostream << "  ";
+            });
+
+        fileSelector.Show(std::cout);
+
+        const int responseIndex = fileSelector.GetLastSelected();
+
+        delete[] fileChoices;
+
+        return allFiles.at(responseIndex);
+    }
+
+    void GridLoader::OnEnter() {
+
+        std::stringstream stream;
+
+        std::string fileName = GetUserChosenFile(FILE_DIRECTORY);
+        if (fileName.empty()) {
+            WinTUI::Color::SetConsoleColor(WTUI_WHITE, WTUI_RED);
+            std::cout << "No valid files have been found!";
+            WinTUI::Color::ResetConsoleColor();
+            WinTUI::Keyboard::WaitForKey();
+
+            fsm::Controller::Get().GoTo(fsm::States::MainMenu);
+        }
+
+
+        std::string filePath(FILE_DIRECTORY);
+        filePath.append(fileName);
+
+        ParseFile(filePath.c_str(), stream);
+
+        fileio::FileWriter::PromptToSave(stream, SOLUTION_DIRECTORY, fileName.append(".solution").c_str());
+
+        fsm::Controller::Get().GoTo(fsm::States::MainMenu);
     }
 
 }

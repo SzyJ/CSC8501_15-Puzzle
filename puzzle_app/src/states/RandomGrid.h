@@ -20,7 +20,7 @@ namespace screen {
 
     private:
         WinTUI::Prompt* m_NumberPrompt;
-        WinTUI::Menu* m_PrintToFileMenu;
+        WinTUI::Menu* m_FileSelector;
 
         int GetUserChoice();
 
