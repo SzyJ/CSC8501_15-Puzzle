@@ -126,7 +126,7 @@ namespace screen {
         stream << generateCount << std::endl;
 
         for (int i = 0; i < generateCount; ++i) {
-            Peng::Grid<int> tileGrid(GRID_SIZE);
+            Peng::Grid<int> tileGrid;
             GenerateGrid(tileGrid, numberFrom, numberTo);
             stream << tileGrid;
             stream << std::endl;

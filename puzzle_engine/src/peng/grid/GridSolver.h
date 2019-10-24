@@ -12,34 +12,43 @@
 namespace Peng {
 
     class GridSolver {
-
     public:
         template <typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
-        static unsigned long long Do(const Grid<T>& grid) {
-            unsigned long long z; // Ways of arranging unused tiles
-            unsigned int u; // Ways of choosing a sequence
-            unsigned int q; // Ways of reversing a collection of sequences
-            unsigned int x; // Ways of arranging the sequences
-            unsigned int m; // No. of rows/cols where sequence could be
+        static void Do(const Grid<T>& grid, const unsigned int sequenceLength, unsigned long& horizontalSeq, unsigned long& verticalSeq) {
+            unsigned int w; // Width of the grid
+            unsigned int h; // Height of the grid
+            unsigned int s; // Sequence Length
+            unsigned int c; // Ways of making the sequence
+            unsigned long long r; // Ways of arranging remaining tiles
+            unsigned int ah; // Available places horizontally
+            unsigned int av; // Available places vertically
 
-            int size = grid.GetSize();
-            int sequenceLength = size;
-            int tileCount = (size * size) - 1;
+            w = grid.GetWidth();
+            h = grid.GetHeight();
+            s = sequenceLength;
+            c = grid.GetSubsequenceCombinations(sequenceLength);
+            r = static_cast<unsigned long long>(Math::Factorial(((w * h) - 1) - s) / 2);
 
-            unsigned long long count = 0;
-
-            for (int sequenceCount = 1; sequenceCount < grid.GetSize(); ++sequenceCount) {
-                z = static_cast<unsigned long long>(0.5 * Math::Factorial( tileCount - (sequenceCount * sequenceLength)));
-                u = Math::Combination((tileCount - sequenceCount * sequenceLength) + sequenceCount, sequenceCount);
-                q = static_cast<unsigned int>(sequenceCount * Math::Pow2(sequenceCount) * 0.5);
-                x = Math::Factorial(sequenceCount);
-                m = Math::Combination(size - 1, sequenceCount);
-
-
-                count += z * u * q * x * m;
+            // Horizontal places
+            if (s == w) {
+                ah = h - 1;
+            } else if (s < w) {
+                ah = ((w - s + 1) * (h - 1)) + (w - s);
+            } else {
+                ah = 0;
             }
 
-            return count;
+            // Vertical places
+            if (s == h) {
+                av = w - 1;
+            } else if (s < h) {
+                av = ((h - s + 1) * (w - 1)) + (h - s);
+            } else {
+                av = 0;
+            }
+
+            horizontalSeq = ah * r * c;
+            verticalSeq = av * r * c;
         }
 
     };

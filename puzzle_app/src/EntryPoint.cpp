@@ -10,18 +10,18 @@
 
 int main() {
 
-    //fsm::Controller::Get().Start(fsm::States::MainMenu);
+    fsm::Controller::Get().Start(fsm::States::MainMenu);
 
 
-    Peng::Grid<int> grid;
-
-    int tileArray[15] = {
-        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-    };
-
-    grid.SetTiles(tileArray, 4);
-
-    std::cout << "Grid Solutions: " << Peng::GridSolver::Do<int>(grid);
+    //Peng::Grid<int> grid;
+    //
+    //int tileArray[15] = {
+    //    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+    //};
+    //
+    //grid.SetTiles(tileArray, 4);
+    //
+    //std::cout << "Grid Solutions: " << Peng::GridSolver::Do<int>(grid);
 
     return 0;
 }

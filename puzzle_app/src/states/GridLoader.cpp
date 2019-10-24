@@ -10,6 +10,7 @@
 #include "fsm/Controller.h"
 
 #include <peng/grid/Grid.h>
+#include <peng/grid/GridSolver.h>
 #include <Utils/Keyboard.h>
 #include <Utils/Color.h>
 
@@ -112,6 +113,7 @@ namespace screen {
 
         for (int currentGrid = 0; currentGrid < gridCount; ++currentGrid) {
             Peng::Grid<int> thisGrid;
+
             int tileArray[(DEFAULT_GRID_SIZE * DEFAULT_GRID_SIZE) - 1];
             int arrayStepper = 0;
 
@@ -125,8 +127,14 @@ namespace screen {
             }
             thisGrid.SetTiles(tileArray, DEFAULT_GRID_SIZE);
 
-            // TODO: pass this to grid solver and propagate through string stream
+            unsigned long horizontalSeq;
+            unsigned long verticalSeq;
+            Peng::GridSolver::Do(thisGrid, 3, horizontalSeq, verticalSeq);
             stream << thisGrid;
+            stream << "row = " << horizontalSeq << std::endl;
+            stream << "column = " << verticalSeq << std::endl;
+            stream << "reverse row = " << horizontalSeq << std::endl;
+            stream << "reverse column = " << verticalSeq << std::endl;
             stream << std::endl;
         }
     }
