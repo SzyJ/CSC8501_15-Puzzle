@@ -16,7 +16,7 @@
 #include <fileio/FileWriter.h>
 
 #define GET_DIGITS(x) ((int) floor(log10(x)))
-#define MAX_GRID_COUNT 10
+#define MAX_GRID_COUNT 99999
 #define GRID_SIZE 4
 
 #define DEFAULT_FILENAME "random_puzzle.15f"

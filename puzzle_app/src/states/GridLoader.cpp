@@ -10,7 +10,6 @@
 #include "fileio/Defaults.h"
 #include "fsm/Controller.h"
 
-
 #include <peng/grid/GridSolver.h>
 #include <Utils/Keyboard.h>
 #include <Utils/Color.h>
@@ -21,7 +20,7 @@
 #include <filesystem>
 #include <thread>
 
-#define DEFAULT_GRID_SIZE 4
+#define EXPECTED_GRID_SIZE 4
 
 namespace screen {
 
@@ -63,7 +62,7 @@ namespace screen {
     void GridLoader::ParseFile(const char* filePath, std::stringstream& stream) const {
         fileio::FileReader file;
 
-        bool readSuccess = file.ReadFile(filePath);
+        const bool readSuccess = file.ReadFile(filePath);
         if (!readSuccess) {
             std::cout << "Failed to read file: " << filePath << std::endl;
             WinTUI::Keyboard::WaitForKey();
@@ -85,18 +84,28 @@ namespace screen {
         for (int currentGrid = 0; currentGrid < gridCount; ++currentGrid) {
             auto* thisGrid = new Peng::Grid<int>();
 
-            int tileArray[(DEFAULT_GRID_SIZE * DEFAULT_GRID_SIZE) - 1];
-            int arrayStepper = 0;
+            //int tileArray[(DEFAULT_GRID_SIZE * DEFAULT_GRID_SIZE) - 1];
+            std::vector<int> tileArray;
+            tileArray.reserve((EXPECTED_GRID_SIZE * EXPECTED_GRID_SIZE) - 1);
+
+            bool widthFound = false;
+            unsigned int heightCounter = 0;
+            unsigned int widthCounter = 0;
 
             while (linePos < fileLines.size() && !EmptyString(currentLine = fileLines.at(linePos++))) {
                 std::stringstream ss(currentLine);
                 std::string token;
 
+                ++heightCounter;
                 while (ss >> token) {
-                    tileArray[arrayStepper++] = std::stoi(token);
+                    if (!widthFound) {
+                        ++widthCounter;
+                    }
+                    tileArray.push_back(std::stoi(token));
                 }
+                widthFound = true;
             }
-            thisGrid->SetTiles(tileArray, DEFAULT_GRID_SIZE);
+            thisGrid->SetTiles(tileArray.data(), widthCounter, heightCounter);
 
             streams.emplace_back(new std::stringstream);
             std::stringstream* thisStream = streams.back();
@@ -120,7 +129,9 @@ namespace screen {
     void GridLoader::PrintGridSolutions(Peng::Grid<int>* grid, std::stringstream& stream) {
         unsigned long long horizontalSeq;
         unsigned long long verticalSeq;
-        Peng::GridSolver::CountAll(*grid, DEFAULT_GRID_SIZE, horizontalSeq, verticalSeq);
+        const unsigned int defaultLength = grid->GetWidth();
+
+        Peng::GridSolver::CountAll(*grid, defaultLength, horizontalSeq, verticalSeq);
         stream << *grid;
         stream << "row = " << horizontalSeq << std::endl;
         stream << "column = " << verticalSeq << std::endl;
@@ -128,12 +139,12 @@ namespace screen {
         stream << "reverse column = " << verticalSeq << std::endl;
         stream << "(total for row and column, including reverse, in this configuration)" << std::endl;
         unsigned long thisConfigTotal;
-        for (int seqLen = 2; seqLen <= DEFAULT_GRID_SIZE; ++seqLen) {
+        for (int seqLen = 2; seqLen <= defaultLength; ++seqLen) {
             Peng::GridSolver::CountThis(*grid, seqLen, thisConfigTotal);
             stream << seqLen << " = " << thisConfigTotal << std::endl;
         }
         stream << "(total for row and column, including reverse, for all valid turns)" << std::endl;
-        for (int seqLen = 2; seqLen <= DEFAULT_GRID_SIZE; ++seqLen) {
+        for (int seqLen = 2; seqLen <= defaultLength; ++seqLen) {
             Peng::GridSolver::CountAll(*grid, seqLen, horizontalSeq, verticalSeq);
             stream << seqLen << " = " << ((horizontalSeq + verticalSeq) * 2) << std::endl;
         }

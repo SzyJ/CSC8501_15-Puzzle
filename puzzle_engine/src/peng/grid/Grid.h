@@ -109,7 +109,7 @@ namespace Peng {
     std::ostream& operator<<(std::ostream& ostream, Grid<U>& grid) {
         for (unsigned int col = 0; col < grid.m_Height; ++col) {
             for (unsigned int row = 0; row < grid.m_Width; ++row) {
-                if (row == grid.m_Height - 1 && col == grid.m_Width - 1) {
+                if (col == grid.m_Height - 1 && row == grid.m_Width - 1) {
                     break;
                 }
                 ostream << grid.GetValue(row, col);
