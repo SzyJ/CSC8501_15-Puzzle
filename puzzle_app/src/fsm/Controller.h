@@ -4,6 +4,7 @@
 #include "states/MainMenu.h"
 #include "states/RandomGrid.h"
 #include "states/GridLoader.h"
+#include "states/GridBuilder.h"
 
 #include <unordered_map>
 
@@ -13,6 +14,7 @@ namespace fsm {
     enum States {
         MainMenu,
         RandomGrid,
+        GridBuilder,
         GridLoader
     };
 
@@ -48,6 +50,7 @@ namespace fsm {
             (*allStates)[MainMenu] = new screen::MainMenu();
             (*allStates)[RandomGrid] = new screen::RandomGrid();
             (*allStates)[GridLoader] = new screen::GridLoader();
+            (*allStates)[GridBuilder] = new screen::GridBuilder();
 
             return allStates;
         }
