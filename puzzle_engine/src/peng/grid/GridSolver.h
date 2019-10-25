@@ -62,7 +62,7 @@ namespace Peng {
 
             T lastVal = -1;
 
-            int currentSequence = 1;
+            unsigned int currentSequence = 1;
 
             for (unsigned int gridY = 0; gridY < height; ++gridY) {
                 for (unsigned int gridX = 0; gridX < width; ++gridX) {
@@ -76,17 +76,22 @@ namespace Peng {
                     }
 
                     T thisVal;
-                    if ((thisVal = grid.GetValue(gridX, gridY)) == lastVal + 1) {
+                    if ((thisVal = grid.GetValue(gridX, gridY)) == lastVal + 1 || thisVal == lastVal - 1) {
                         ++currentSequence;
                         lastVal = thisVal;
                     } else {
                         if (currentSequence >= sequenceLength) {
-                            total += (currentSequence - sequenceLength + 1) * 2;
+                            total += currentSequence - sequenceLength + 1;
                         }
                         currentSequence = 1;
                         lastVal = thisVal;
                     }
                 }
+
+                if (currentSequence >= sequenceLength) {
+                    total += currentSequence - sequenceLength + 1;
+                }
+                currentSequence = 1;
 
                 lastVal = -1;
             }
@@ -103,17 +108,22 @@ namespace Peng {
                     }
 
                     int thisVal;
-                    if ((thisVal = grid.GetValue(gridX, gridY)) == lastVal + 1) {
+                    if ((thisVal = grid.GetValue(gridX, gridY)) == lastVal + 1 || thisVal == lastVal - 1) {
                         ++currentSequence;
                         lastVal = thisVal;
                     } else {
                         if (currentSequence >= sequenceLength) {
-                            total += (currentSequence - sequenceLength + 1) * 2;
+                            total += currentSequence - sequenceLength + 1;
                         }
                         currentSequence = 1;
                         lastVal = thisVal;
                     }
                 }
+
+                if (currentSequence >= sequenceLength) {
+                    total += currentSequence - sequenceLength + 1;
+                }
+                currentSequence = 1;
 
                 lastVal = -1;
             }
