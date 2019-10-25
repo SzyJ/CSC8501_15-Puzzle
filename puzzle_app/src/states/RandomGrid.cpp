@@ -2,7 +2,7 @@
 // 
 // Project: puzzle_app
 // File: RandomGrid.cpp
-// Date: 22/10/2019
+// Date: 25/10/2019
 
 #include "RandomGrid.h"
 #include "Utils/Color.h"
@@ -24,17 +24,17 @@
 
 namespace screen {
 
-    RandomGrid::RandomGrid() {
-        m_NumberPrompt = new WinTUI::Prompt("How many grids to generate");
+    WinTUI::Prompt* RandomGrid::GetNumberPrompt() {
+        auto* numberPrompt = new WinTUI::Prompt("How many grids to generate");
 
-        m_NumberPrompt->SetSelectedBefore([](std::ostream& ostream) {
+        numberPrompt->SetSelectedBefore([](std::ostream& ostream) {
             WinTUI::Color::SetConsoleColor(WTUI_LIGHT_GREEN);
         });
-        m_NumberPrompt->SetSelectedAfter([](std::ostream& ostream) {
+        numberPrompt->SetSelectedAfter([](std::ostream& ostream) {
             WinTUI::Color::ResetConsoleColor();
             ostream << "? ";
         });
-        m_NumberPrompt->SetCondition([](const char* string) {
+        numberPrompt->SetCondition([](const char* string) {
             char thisChar;
 
             if (*string == '\0') {
@@ -53,7 +53,7 @@ namespace screen {
 
             return true;
         });
-        m_NumberPrompt->SetWarning([](std::ostream& ostream) {
+        numberPrompt->SetWarning([](std::ostream& ostream) {
             WinTUI::Color::SetConsoleColor(WTUI_WHITE, WTUI_RED);
             int expectedNum = (GET_DIGITS(MAX_GRID_COUNT) + 1);
 
@@ -66,19 +66,19 @@ namespace screen {
             }
 
         });
-    }
 
-    RandomGrid::~RandomGrid() {
-        delete m_NumberPrompt;
+        return numberPrompt;
     }
 
     int RandomGrid::GetUserChoice() {
+        WinTUI::Prompt* numberPrompt = GetNumberPrompt();
         int gridsToGenerate;
 
         do {
-            m_NumberPrompt->Show(std::cout);
-        } while ((gridsToGenerate = std::stoi(m_NumberPrompt->GetLastResponse())) > MAX_GRID_COUNT);
+            numberPrompt->Show(std::cout);
+        } while ((gridsToGenerate = std::stoi(numberPrompt->GetLastResponse())) > MAX_GRID_COUNT);
 
+        delete numberPrompt;
         return gridsToGenerate;
     }
 

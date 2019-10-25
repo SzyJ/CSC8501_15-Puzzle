@@ -2,7 +2,7 @@
 // 
 // Project: puzzle_app
 // File: MainMenu.h
-// Date: 18/10/2019
+// Date: 25/10/2019
 
 #pragma once
 
@@ -22,17 +22,11 @@ namespace screen {
         MainMenu();
         ~MainMenu();
 
-        void Show();
-
-        int GetLastSelected();
-
-        void GoTo();
-
     private:
-       WinTUI::Menu* m_MainMenu;
+        WinTUI::Menu* m_MainMenu;
 
-       virtual void OnEnter() override;
-       virtual void OnExit() override;
+        virtual void OnEnter() override;
+        virtual void OnExit() override;
     };
 
 }

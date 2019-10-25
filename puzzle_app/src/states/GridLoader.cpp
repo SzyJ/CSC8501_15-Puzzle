@@ -2,7 +2,7 @@
 // 
 // Project: puzzle_app
 // File: GridLoader.cpp
-// Date: 24/10/2019
+// Date: 25/10/2019
 
 #include "GridLoader.h"
 #include "fileio/FileReader.h"
@@ -24,42 +24,11 @@
 
 namespace screen {
 
-    GridLoader::GridLoader() {
-
-        const char* menuOptions[] = {
-            "Yes",
-            "No"
-        };
-
-        m_PrintToFileMenu = new WinTUI::Menu(menuOptions, 2);
-
-        m_PrintToFileMenu->SetSelectedBefore([](std::ostream& ostream) {
-            ostream << "* ";
-            WinTUI::Color::SetConsoleColor(WTUI_LIGHT_GREEN);
-        });
-        m_PrintToFileMenu->SetSelectedAfter([](std::ostream& ostream) {
-            WinTUI::Color::ResetConsoleColor();
-            ostream << " *";
-        });
-
-        m_PrintToFileMenu->SetUnselectedBefore([](std::ostream& ostream) {
-            ostream << "  ";
-        });
-
-        m_PrintToFileMenu->SetUnselectedAfter([](std::ostream& ostream) {
-            ostream << "  ";
-        });
-    }
-
-    GridLoader::~GridLoader() {
-        delete m_PrintToFileMenu;
-    }
-
     bool GridLoader::EmptyString(std::string& str) {
         return str.empty() || (std::all_of(str.begin(), str.end(), isspace));
     }
 
-    void GridLoader::ParseFile(const char* filePath, std::stringstream& stream) const {
+    void GridLoader::ParseFile(const char* filePath, std::stringstream& stream) {
         fileio::FileReader file;
 
         const bool readSuccess = file.ReadFile(filePath);
@@ -84,7 +53,6 @@ namespace screen {
         for (int currentGrid = 0; currentGrid < gridCount; ++currentGrid) {
             auto* thisGrid = new Peng::Grid<int>();
 
-            //int tileArray[(DEFAULT_GRID_SIZE * DEFAULT_GRID_SIZE) - 1];
             std::vector<int> tileArray;
             tileArray.reserve((EXPECTED_GRID_SIZE * EXPECTED_GRID_SIZE) - 1);
 

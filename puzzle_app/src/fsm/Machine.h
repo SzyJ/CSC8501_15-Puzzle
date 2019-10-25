@@ -1,3 +1,9 @@
+// Author: Szymon Jackiewicz
+// 
+// Project: puzzle_app
+// File: Machine.h
+// Date: 25/10/2019
+
 #pragma once
 #include "fsm/State.h"
 
@@ -32,7 +38,7 @@ namespace fsm {
         State* m_CurrentState = nullptr;
 
         Machine() {}
-        
+
     };
 
 }

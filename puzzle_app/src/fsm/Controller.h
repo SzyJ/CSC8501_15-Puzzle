@@ -1,3 +1,9 @@
+// Author: Szymon Jackiewicz
+// 
+// Project: puzzle_app
+// File: Controller.h
+// Date: 25/10/2019
+
 #pragma once
 #include "fsm/State.h"
 #include "fsm/Machine.h"

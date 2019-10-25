@@ -2,7 +2,7 @@
 // 
 // Project: puzzle_app
 // File: FileWriter.h
-// Date: 21/10/2019
+// Date: 25/10/2019
 
 #pragma once
 #include "fileio/Defaults.h"
@@ -39,8 +39,8 @@ namespace fileio {
 
         static inline void PromptToSave(std::stringstream& toPrint, const char* dirPath, const char* fileName) {
             const char* menuOptions[] = {
-            "Yes",
-            "No"
+                "Yes",
+                "No"
             };
 
             WinTUI::Menu printToFileMenu(menuOptions, 2);
@@ -48,26 +48,26 @@ namespace fileio {
             printToFileMenu.SetSelectedBefore([](std::ostream& ostream) {
                 ostream << "* ";
                 WinTUI::Color::SetConsoleColor(WTUI_LIGHT_GREEN);
-                });
+            });
             printToFileMenu.SetSelectedAfter([](std::ostream& ostream) {
                 WinTUI::Color::ResetConsoleColor();
                 ostream << " *";
-                });
+            });
 
             printToFileMenu.SetUnselectedBefore([](std::ostream& ostream) {
                 ostream << "  ";
-                });
+            });
 
             printToFileMenu.SetUnselectedAfter([](std::ostream& ostream) {
                 ostream << "  ";
-                });
+            });
 
             const char* question = "\nWould you like to save this to a file?\n";
 
             printToFileMenu.SetFixtureBefore([=, &toPrint, &question](std::ostream& ostream) {
                 ostream << toPrint.str();
                 ostream << question;
-                });
+            });
 
             printToFileMenu.Show(std::cout);
 
@@ -75,7 +75,7 @@ namespace fileio {
                 std::string filePath(dirPath);
                 filePath.append(fileName);
 
-                bool success = fileio::FileWriter::WriteToFile(filePath.c_str() , toPrint);
+                bool success = fileio::FileWriter::WriteToFile(filePath.c_str(), toPrint);
                 std::cout << std::endl;
                 if (success) {
                     std::cout << "Saved successfully to: \"" << filePath << "\"" << std::endl;

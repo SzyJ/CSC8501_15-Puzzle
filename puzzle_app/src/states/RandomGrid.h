@@ -2,7 +2,7 @@
 // 
 // Project: puzzle_app
 // File: RandomGrid.h
-// Date: 22/10/2019
+// Date: 25/10/2019
 
 #pragma once
 #include "fsm/State.h"
@@ -15,18 +15,17 @@ namespace screen {
 
     class RandomGrid : public fsm::State {
     public:
-        RandomGrid();
-        ~RandomGrid();
+        RandomGrid() = default;
+        ~RandomGrid() = default;
 
     private:
-        WinTUI::Prompt* m_NumberPrompt;
-        WinTUI::Menu* m_FileSelector;
+        static WinTUI::Prompt* GetNumberPrompt();
 
-        int GetUserChoice();
+        static int GetUserChoice();
 
         static void GenerateGrid(Peng::Grid<int>& tileGrid, int numbersFrom, int numbersTo);
 
-        void GenerateAndPrintGrids(std::stringstream& stream, int generateCount, int numberFrom, int numberTo);
+        static void GenerateAndPrintGrids(std::stringstream& stream, int generateCount, int numberFrom, int numberTo);
         virtual void OnEnter() override;
 
     };
